@@ -13,7 +13,6 @@
 
     <Label styleClass="text" fx:id="welcomeText"/>
     <Label styleClass="text" fx:id="debugTest"/>
-    <Label styleClass="text" fx:id="selectedFileLabel"/>
-    <Button styleClass="test" text="Hello!" onAction="#onHelloButtonClick"/>
+    <VBox fx:id="buttonContainer" spacing="5"/>
     <Button styleClass="button" text="Select File" onAction="#onFileButtonClick"/>
 </VBox>

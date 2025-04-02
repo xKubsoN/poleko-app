@@ -11,6 +11,9 @@
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <Label styleClass="text" fx:id="welcomeText"/>
+    <Label styleClass="text" fx:id="debugTest"/>
+    <Label styleClass="text" fx:id="selectedFileLabel"/>
+    <Button styleClass="test" text="Hello!" onAction="#onHelloButtonClick"/>
+    <Button styleClass="button" text="Select File" onAction="#onFileButtonClick"/>
 </VBox>

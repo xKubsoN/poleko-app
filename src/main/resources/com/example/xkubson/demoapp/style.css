@@ -1,0 +1,15 @@
+.root {
+    -fx-background-color: 'black';
+}
+
+.test {
+    -fx-background-color: 'red';
+    -fx-background-radius: 50px;
+    -fx-border-radius: 50px;
+    -fx-border-width: 5px;
+    -fx-border-color: 'green';
+}
+
+.text {
+    -fx-fill: 'white';
+}

@@ -25,21 +25,12 @@ public class FileController {
         keyChildrenMap.clear();
 
         String content = Files.readString(jsonFile.toPath());
-
         Object root = new org.json.JSONTokener(content).nextValue();
+
         if (root instanceof JSONArray) {
             processJsonArray((JSONArray) root, "");
         } else if (root instanceof JSONObject) {
             processJsonObject((JSONObject) root, "");
-            List<String> rootChildren = new ArrayList<>();
-            Iterator<String> keys = ((JSONObject) root).keys();
-            while (keys.hasNext()) {
-                String key = keys.next();
-                rootChildren.add(key);
-            }
-            if (!rootChildren.isEmpty()) {
-                keyChildrenMap.put("", rootChildren);
-            }
         }
     }
 

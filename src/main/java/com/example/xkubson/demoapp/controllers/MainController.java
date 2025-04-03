@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,10 +49,15 @@ public class MainController {
     public boolean jsonValidation(String json) {
         try {
             new JSONObject(json);
+            return true;
         } catch (JSONException e) {
-            return false;
+            try {
+                new JSONArray(json);
+                return true;
+            } catch (JSONException e2) {
+                return false;
+            }
         }
-        return true;
     }
 
     @FXML
@@ -128,7 +134,8 @@ public class MainController {
     }
 
     private void addKeyButton(String key) {
-        Button keyButton = new Button("Key: " + key);
+        String buttonText = key.matches("\\[\\d+\\]") ? "Array item " + key : "Key: " + key;
+        Button keyButton = new Button(buttonText);
         keyButton.setOnAction(event -> {
             if (keyChildrenMap.containsKey(key)) {
                 navigationStack.push(key);

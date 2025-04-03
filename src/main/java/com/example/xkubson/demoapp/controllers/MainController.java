@@ -3,39 +3,148 @@ package com.example.xkubson.demoapp.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class MainController {
-    @FXML
-    private Label debugTest;
-
+    @FXML private Label debugTest;
     @FXML private VBox buttonContainer;
+    @FXML private VBox textContainer;
+    @FXML private VBox textContainerChild;
+    @FXML private HBox controlButtonContainer;
+    @FXML private Button returnButton;
+    @FXML private Button homeButton;
+    @FXML private Button clearButton;
+    @FXML private Button fileSelectButton;
+    @FXML private ScrollPane keyScroll;
+    @FXML private ScrollPane textScroll;
+    @FXML private ImageView imageDisplay;
 
-    private List<String> jsonKeys;
+    private FileController fileController;
+    private Map<String, String> keyValueMap;
+    private Map<String, List<String>> keyChildrenMap;
+    private Stack<String> navigationStack;
 
     public void initialize() {
-        FileController fileController = new FileController();
-        jsonKeys = fileController.getJsonKeys();
+        fileController = new FileController();
+        keyValueMap = fileController.getKeyValueMap();
+        keyChildrenMap = fileController.getKeyChildrenMap();
+        navigationStack = new Stack<>();
+        navigationStack.push("");
+        showPrimaryKeys();
     }
 
     @FXML
-    public void onFileButtonClick() {
-//        System.out.println(jsonKeys); //DEBUG
-        if (jsonKeys != null && !jsonKeys.isEmpty()) {
-            debugTest.setText("Keys: " + String.join(", ", jsonKeys));
-            buttonContainer.getChildren().clear();
-            for (String key : jsonKeys) {
-                Button keyButton = new Button(key);
-                keyButton.setOnAction(actionEvent -> {
-                    debugTest.setText("Clicked button for key: " + key);
-                });
-                buttonContainer.getChildren().add(keyButton);
+    public void onFileSelectButtonClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select JSON File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
+
+        Stage stage = (Stage) fileSelectButton.getScene().getWindow();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+
+        if (selectedFile != null) {
+            try {
+                fileController.loadJsonKeyValuePairs(selectedFile);
+                keyValueMap = fileController.getKeyValueMap();
+                keyChildrenMap = fileController.getKeyChildrenMap();
+                navigationStack.clear();
+                navigationStack.push("");
+                showPrimaryKeys();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
             }
+        }
+    }
+
+    @FXML
+    public void onReturnButtonClick() {
+        if (navigationStack.size() > 1) {
+            navigationStack.pop();
+            String parentKey = navigationStack.peek();
+            showKeysForLevel(parentKey);
         } else {
-            debugTest.setText("0 Keys found");
+            showPrimaryKeys();
+        }
+    }
+
+    @FXML
+    public void onHomeButtonClick() {
+        navigationStack.clear();
+        navigationStack.push("");
+        showPrimaryKeys();
+    }
+
+    @FXML
+    public void onClearButtonClick() {
+        debugTest.setText("");
+    }
+
+    private void showPrimaryKeys() {
+        buttonContainer.getChildren().clear();
+        List<String> primaryKeys = keyChildrenMap.getOrDefault("", List.of());
+
+        if (!primaryKeys.isEmpty()) {
+            for (String key : primaryKeys) {
+                addKeyButton(key);
+            }
+        }
+    }
+
+    private void showKeysForLevel(String parentKey) {
+        buttonContainer.getChildren().clear();
+        List<String> children = keyChildrenMap.getOrDefault(parentKey, List.of());
+
+        if (children.isEmpty()) {
+            debugTest.setText("No children keys for: " + parentKey);
+        } else {
+            for (String child : children) {
+                addKeyButton(child);
+            }
+        }
+    }
+
+    private void addKeyButton(String key) {
+        Button keyButton = new Button("Key: " + key);
+        keyButton.setOnAction(event -> {
+            if (keyChildrenMap.containsKey(key)) {
+                navigationStack.push(key);
+                showKeysForLevel(key);
+                debugTest.setText(getAllContentUnderKey(key));
+            } else {
+                String value = keyValueMap.get(key);
+                debugTest.setText("Value: " + value);
+            }
+        });
+        buttonContainer.getChildren().add(keyButton);
+    }
+
+    private String getAllContentUnderKey(String parentKey) {
+        StringBuilder content = new StringBuilder();
+        Set<String> processedKeys = new HashSet<>();
+        collectContent(parentKey, "", content, processedKeys);
+        return content.toString();
+    }
+
+    private void collectContent(String currentKey, String indent, StringBuilder content, Set<String> processedKeys) {
+        if (processedKeys.contains(currentKey)) {
+            return;
+        }
+        processedKeys.add(currentKey);
+        if (keyValueMap.containsKey(currentKey)) {
+            content.append(indent).append(currentKey).append(": ").append(keyValueMap.get(currentKey)).append("\n");
+        }
+        List<String> children = keyChildrenMap.getOrDefault(currentKey, List.of());
+        for (String child : children) {
+            collectContent(child, indent + "  ", content, processedKeys);
         }
     }
 }

@@ -14,7 +14,8 @@ public class MainApp extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 800, 480);
         String css = this.getClass().getResource("style.css").toExternalForm();
         scene.getStylesheets().add(css);
-        stage.setTitle("Hello!");
+        stage.setResizable(false);
+        stage.setTitle("JSON Viewer");
         stage.setScene(scene);
         stage.show();
     }

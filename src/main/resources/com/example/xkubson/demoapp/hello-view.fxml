@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.xkubson.demoapp.controllers.MainController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label styleClass="text" fx:id="welcomeText"/>
-    <Label styleClass="text" fx:id="debugTest"/>
-    <VBox fx:id="buttonContainer" spacing="5"/>
-    <Button styleClass="button" text="Select File" onAction="#onFileButtonClick"/>
+<VBox alignment="CENTER" prefHeight="480.0" prefWidth="800.0" spacing="5" styleClass="mainContainer" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.xkubson.demoapp.controllers.MainController">
+    <ImageView fx:id="imageDisplay" fitHeight="210.0" fitWidth="307.0" preserveRatio="true">
+      <image>
+         <Image url="@assets/pol-eko-logo-r.png" />
+      </image>
+    </ImageView>
+    <VBox alignment="BOTTOM_CENTER" prefHeight="350.0" prefWidth="802.0">
+        <HBox alignment="BOTTOM_CENTER" prefHeight="350.0" prefWidth="800.0" spacing="10.0">
+            <ScrollPane fx:id="keyScroll" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" pannable="true" prefHeight="350.0" prefWidth="390.0" styleClass="scrollPane">
+                <VBox fx:id="buttonContainer" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="350.0" prefWidth="390.0" spacing="5" styleClass="textContainer" />
+            </ScrollPane>
+            <VBox fx:id="textContainer" alignment="CENTER" fillWidth="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="400.0" spacing="5" styleClass="textContainer">
+                <HBox fx:id="controlButtonContainer" alignment="CENTER" prefHeight="25.0" prefWidth="400.0" spacing="10">
+                    <Button fx:id="fileSelectButton" onAction="#onFileSelectButtonClick" styleClass="button" text="Select File" />
+                    <Button fx:id="homeButton" onAction="#onHomeButtonClick" styleClass="button" text="Home" />
+                    <Button fx:id="returnButton" onAction="#onReturnButtonClick" styleClass="button" text="Return" />
+                    <Button fx:id="clearButton" onAction="#onClearButtonClick" styleClass="button" text="Clear" />
+                </HBox>
+                  <Label fx:id="debugTest" prefHeight="315.0" prefWidth="390.0" styleClass="labelText" wrapText="true">
+                        </Label>
+            </VBox>
+        </HBox>
+    </VBox>
 </VBox>

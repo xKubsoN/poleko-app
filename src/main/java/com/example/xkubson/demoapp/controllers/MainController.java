@@ -9,9 +9,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 public class MainController {
@@ -42,17 +45,29 @@ public class MainController {
         showPrimaryKeys();
     }
 
+    public boolean jsonValidation(String json) {
+        try {
+            new JSONObject(json);
+        } catch (JSONException e) {
+            return false;
+        }
+        return true;
+    }
+
     @FXML
     public void onFileSelectButtonClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select JSON File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));
-
         Stage stage = (Stage) fileSelectButton.getScene().getWindow();
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         if (selectedFile != null) {
             try {
+                String content = Files.readString(selectedFile.toPath());
+                if (!jsonValidation(content)) {
+                    return;
+                }
                 fileController.loadJsonKeyValuePairs(selectedFile);
                 keyValueMap = fileController.getKeyValueMap();
                 keyChildrenMap = fileController.getKeyChildrenMap();

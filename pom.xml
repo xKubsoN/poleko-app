@@ -44,6 +44,12 @@
             <artifactId>json</artifactId>
             <version>20250107</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.jfoenix/jfoenix -->
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -66,7 +72,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.xkubson.demoapp/com.example.xkubson.demoapp.MainApp
+                            <mainClass>com.example.xkubson.demoapp/com.example.xkubson.demoapp.App
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

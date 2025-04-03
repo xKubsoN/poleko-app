@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,7 +56,8 @@ public class MainController {
     }
 
     @FXML
-    public void onFileSelectButtonClick() {
+    public void onFileSelectButtonClick() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+        UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Select JSON File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON", "*.json"));

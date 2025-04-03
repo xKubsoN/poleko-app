@@ -22,7 +22,7 @@
                     <Button fx:id="returnButton" onAction="#onReturnButtonClick" styleClass="button" text="Return" />
                     <Button fx:id="clearButton" onAction="#onClearButtonClick" styleClass="button" text="Clear" />
                 </HBox>
-                  <Label fx:id="debugTest" prefHeight="315.0" prefWidth="390.0" styleClass="labelText" wrapText="true">
+                  <Label fx:id="textLabel" prefHeight="315.0" prefWidth="390.0" styleClass="labelText" wrapText="true">
                         </Label>
             </VBox>
         </HBox>

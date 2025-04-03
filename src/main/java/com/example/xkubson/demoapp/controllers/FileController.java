@@ -20,17 +20,22 @@ public class FileController {
         return keyChildrenMap;
     }
 
-    public void loadJsonKeyValuePairs(File jsonFile) throws IOException {
+    public void jsonKeyValue(File jsonFile) throws IOException {
         keyValueMap.clear();
         keyChildrenMap.clear();
 
-        String content = Files.readString(jsonFile.toPath());
+        String content = Files.readString(jsonFile.toPath()).trim();
         Object root = new org.json.JSONTokener(content).nextValue();
 
         if (root instanceof JSONArray) {
             processJsonArray((JSONArray) root, "");
         } else if (root instanceof JSONObject) {
-            processJsonObject((JSONObject) root, "");
+            JSONObject jsonObject = (JSONObject) root;
+            processJsonObject(jsonObject, "");
+            List<String> rootChildren = new ArrayList<>(jsonObject.keySet());
+            if (!rootChildren.isEmpty()) {
+                keyChildrenMap.put("", rootChildren);
+            }
         }
     }
 

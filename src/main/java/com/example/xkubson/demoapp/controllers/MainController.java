@@ -19,7 +19,7 @@ import java.nio.file.Files;
 import java.util.*;
 
 public class MainController {
-    @FXML private Label debugTest;
+    @FXML private Label textLabel;
     @FXML private VBox buttonContainer;
     @FXML private VBox textContainer;
     @FXML private VBox textContainerChild;
@@ -70,18 +70,18 @@ public class MainController {
 
         if (selectedFile != null) {
             try {
-                String content = Files.readString(selectedFile.toPath());
+                String content = Files.readString(selectedFile.toPath()).trim();
                 if (!jsonValidation(content)) {
                     return;
                 }
-                fileController.loadJsonKeyValuePairs(selectedFile);
+                fileController.jsonKeyValue(selectedFile);
                 keyValueMap = fileController.getKeyValueMap();
                 keyChildrenMap = fileController.getKeyChildrenMap();
                 navigationStack.clear();
                 navigationStack.push("");
                 showPrimaryKeys();
             } catch (IOException e) {
-                System.out.println(e.getMessage());
+                textLabel.setText(e.getMessage());
             }
         }
     }
@@ -106,14 +106,16 @@ public class MainController {
 
     @FXML
     public void onClearButtonClick() {
-        debugTest.setText("");
+        textLabel.setText("");
     }
 
     private void showPrimaryKeys() {
         buttonContainer.getChildren().clear();
         List<String> primaryKeys = keyChildrenMap.getOrDefault("", List.of());
 
-        if (!primaryKeys.isEmpty()) {
+        if (primaryKeys.isEmpty()) {
+            System.out.println("no primary keys");
+        } else {
             for (String key : primaryKeys) {
                 addKeyButton(key);
             }
@@ -125,7 +127,7 @@ public class MainController {
         List<String> children = keyChildrenMap.getOrDefault(parentKey, List.of());
 
         if (children.isEmpty()) {
-            debugTest.setText("No children keys for: " + parentKey);
+            System.out.println("no lower keys for" + parentKey);
         } else {
             for (String child : children) {
                 addKeyButton(child);
@@ -140,10 +142,10 @@ public class MainController {
             if (keyChildrenMap.containsKey(key)) {
                 navigationStack.push(key);
                 showKeysForLevel(key);
-                debugTest.setText(getAllContentUnderKey(key));
+                textLabel.setText(getAllContentUnderKey(key));
             } else {
                 String value = keyValueMap.get(key);
-                debugTest.setText("Value: " + value);
+                textLabel.setText("Value: " + value);
             }
         });
         buttonContainer.getChildren().add(keyButton);

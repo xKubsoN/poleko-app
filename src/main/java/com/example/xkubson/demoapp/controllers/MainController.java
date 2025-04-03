@@ -134,7 +134,7 @@ public class MainController {
     }
 
     private void addKeyButton(String key) {
-        String buttonText = key.matches("\\[\\d+\\]") ? "Array item " + key : "Key: " + key;
+        String buttonText = key.matches("\\[\\d+\\]") ? "Array item " + key : "Key " + key;
         Button keyButton = new Button(buttonText);
         keyButton.setOnAction(event -> {
             if (keyChildrenMap.containsKey(key)) {
